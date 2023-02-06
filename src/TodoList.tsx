@@ -1,12 +1,13 @@
 import React from 'react';
 import TaskList from "./TaskList";
+import {FilterValuesType} from "./App";
 
 type TodoListPropsType = {
     title: string;
     tasks: Array<TaskType>;
-    //То же самое, но по-другому:
-    //tasks: TaskType[];
-
+    //tasks: TaskType[];//То же самое, но по-другому:
+    changeFilterValue: (filter:FilterValuesType) => void
+    removeTask: (taskId: number) => void
 }
 
 export type TaskType = {
@@ -23,11 +24,16 @@ const TodoList = (props: TodoListPropsType) => {
                 <input/>
                 <button>+</button>
             </div>
-            <TaskList tasks={props.tasks}/>
+            <TaskList tasks={props.tasks} removeTask={props.removeTask}/>
             <div>
-                <button>All</button>
-                <button>Active</button>
-                <button>Completed</button>
+                <button
+                    onClick={()=>props.changeFilterValue("all")}
+                >All</button>
+                <button
+                    onClick={()=>props.changeFilterValue("active")}
+                >Active</button>
+                <button onClick={()=>props.changeFilterValue("completed")}
+                >Completed</button>
             </div>
         </div>
     );
