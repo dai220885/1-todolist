@@ -6,3 +6,48 @@
 .App > div {
   margin-right: 50px;
 }
+
+
+.todolist {
+  border: 2px solid hotpink;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.task {
+  font-weight: bold;
+}
+
+.task-done {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.active-filter-btn {
+  background-color: hotpink;
+  font-weight: bold;
+  color: white;
+  border: 2px solid hotpink;
+  border-radius: 3px;
+
+}
+
+.filter-btn
+{
+  background-color: darkgray;
+  font-weight: bold;
+  color: white;
+  border: 2px solid darkgray;
+  border-radius: 3px;
+
+}
+
+.filter-btn-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-error {
+  border: 2px solid red;
+  outline: none;
+}
