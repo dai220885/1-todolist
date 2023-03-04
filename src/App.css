@@ -1,6 +1,10 @@
 .App {
   padding: 30px;
   display: flex;
+  /*display: grid;*/
+  /*grid-template-columns: repeat(auto-fill,minmax(200px, 1fr));*/
+  /*align-items: start;*/
+  /*grid-template-columns: repeat(auto-fill,minmax(200px, 1fr));*/
 }
 
 .App > div {
@@ -12,6 +16,8 @@
   border: 2px solid hotpink;
   border-radius: 5px;
   padding: 5px;
+  /*для того, чтобы тудулисты могли быть разные по длине*/
+  align-self:flex-start;
 }
 
 .task {
