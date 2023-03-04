@@ -2,9 +2,10 @@ import React, {ChangeEvent, FC} from 'react';
 import {TaskType} from "./TodoList";
 
 type TasksListPropsType = {
+    todoListId: string
     tasks: TaskType[]
-    removeTask: (taskId: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean) => void
+    removeTask: (todoListId: string, taskId: string) => void
+    changeTaskStatus: (todoListId: string, taskId: string, isDone: boolean) => void
 }
 
 const TasksList: FC<TasksListPropsType> = (props): JSX.Element => {
@@ -13,8 +14,8 @@ const TasksList: FC<TasksListPropsType> = (props): JSX.Element => {
             ? props.tasks.map((task)=> {
                 const taskClasses = ['task']
                 task.isDone && taskClasses.push('task-done')
-                const removeTaskHandler = ()=>props.removeTask(task.id)
-                const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>)=>props.changeTaskStatus(task.id, e.currentTarget.checked)
+                const removeTaskHandler = ()=>props.removeTask(props.todoListId, task.id)
+                const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>)=>props.changeTaskStatus(props.todoListId, task.id, e.currentTarget.checked)
                 return (
                     <li key={task.id}>{/*key нужен для того, чтобы при изменении списка (перерендеринг) React понимал, какой элемент из списка добавился, а какой уже был ранее*/}
                         <input

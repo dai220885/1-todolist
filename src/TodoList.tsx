@@ -3,14 +3,15 @@ import TaskList from './TaskList';
 import {FilterValuesType} from './App';
 
 type TodoListPropsType = {
+    todoListId: string
     title: string;
     filter: FilterValuesType
-    //tasks: Array<TaskType>;//То же самое, но по-другому
     tasks: TaskType[];
-    changeFilterValue: (filter: FilterValuesType) => void
-    removeTask: (taskId: string) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean) => void
+    changeFilterValue: (todoListId: string, filter: FilterValuesType) => void
+    removeTask: (todoListId: string, taskId: string) => void
+    addTask: (todoListId: string, title: string) => void
+    changeTaskStatus: (todoListId: string, taskId: string, isDone: boolean) => void
+    removeTodoList: (todoListId: string) => void
 }
 
 export type TaskType = {
@@ -20,48 +21,37 @@ export type TaskType = {
 }
 
 const TodoList = (props: TodoListPropsType) => {
-    // const addTaskInput:RefObject<HTMLInputElement> = useRef(null)
-    //
-    // const addTask = () =>{
-    //     if(addTaskInput.current) {
-    //     props.addTask(addTaskInput.current.value)
-    //         addTaskInput.current.value=''
-    //     }
-    // }
-    // const addTask = () =>{
-    //     addTaskInput.current&&props.addTask(addTaskInput.current.value)
-    // }
     const [title, setTitle] = useState<string>('')//локальный стейт для хранения значения, введенного в инпуте
     const [error, setError] = useState<boolean>(false)//локальный стейт для хранения значения, есть ли ошибка ввода(пока только ошибка пустой строки, ошибка превышения лимита введенных символов тут не обрабатывается)
     const changeLocalTitle = (e: ChangeEvent<HTMLInputElement>) => {
         error && setError(false) //снимаем ошибку, если начали печатать
         setTitle(e.currentTarget.value)
     }
+
+    const removeTodoListHandler = () => {
+        props.removeTodoList(props.todoListId)
+    }
+
     const addTask = () => {
         const trimmedTitle = title.trim()
-        if (isUserMessageValid) {props.addTask(trimmedTitle); setTitle('')}//если введен текст не длиннее 15 символов и не короче одного, то добавляем таску и обнуляем инпут
+        if (isUserMessageValid) {props.addTask(props.todoListId, trimmedTitle); setTitle('')}//если введен текст не длиннее 15 символов и не короче одного, то добавляем таску и обнуляем инпут
         else if(isUserMessageToShot) {setError(true)} // если пытаемся добавить пустую таску, то добавить ошибку (если error в стейте равно true, то показывается ошибка о том, что слишком короткая строчка (
-
-
     }
+
+    const onKeyDownAddTask = (e:KeyboardEvent<HTMLInputElement>)=>{e.key === 'Enter'&&addTask()}
 
     //создаем универсальный создатель функции, который вернет функцию, в которую передаст параметр, переданный в него )))))))
     const filterHandlerCreator = (filter: FilterValuesType) => {
-        return () => props.changeFilterValue(filter)
+        return () => props.changeFilterValue(props.todoListId, filter)
     }
-
     //то же самое, но в другой записи, без ретурна и фигурных скобок
-    const filterHandlerCreator2 = (filter: FilterValuesType) => () => props.changeFilterValue(filter)
-
+    // const filterHandlerCreator2 = (filter: FilterValuesType) => () => props.changeFilterValue(props.todoListId, filter)
 
     //старый вариант:
-    const setAllFilterValue = () => props.changeFilterValue('all')
-    const setActiveFilterValue = () => props.changeFilterValue('active')
-    const setCompletedFilterValue = () => props.changeFilterValue('completed')
+    // const setAllFilterValue = () => props.changeFilterValue(props.todoListId, 'all')
+    // const setActiveFilterValue = () => props.changeFilterValue(props.todoListId, 'active')
+    // const setCompletedFilterValue = () => props.changeFilterValue(props.todoListId, 'completed')
 
-
-
-    const onKeyDownAddTask = (e:KeyboardEvent<HTMLInputElement>)=>{e.key === 'Enter'&&addTask()}
     const maxLengthMessage: number = 15
     const isUserMessageToLong: boolean = title.length >maxLengthMessage
     const isUserMessageToShot:boolean = title.trim().length<1
@@ -74,7 +64,10 @@ const TodoList = (props: TodoListPropsType) => {
 
     return (
         <div className={'todolist'}>
-            <h3>{props.title}</h3>
+            <h3>
+                {props.title}
+                <button onClick={removeTodoListHandler}>del</button>
+            </h3>
             <div>
                 {/*вариант для юзрефа, когда не нужно в реальном времени отвлеживать, что именно находится в инпуте*/}
                 {/*<input ref={addTaskInput}/>*/}
@@ -95,6 +88,7 @@ const TodoList = (props: TodoListPropsType) => {
 
             </div>
             <TaskList
+                todoListId = {props.todoListId}
                 tasks={props.tasks}
                 removeTask={props.removeTask}
                 changeTaskStatus = {props.changeTaskStatus}/>
